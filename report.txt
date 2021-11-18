@@ -1,0 +1,260 @@
+Sophia Liu 
+UID: 405066545
+
+In my program, I implemented a circular doubly-linked list. Each node in the list has a pointer to the preceding node, a pointer to the following node, and a member called "data" of the specified item type. The only exception to this is the dummy node, or "head" node which doesn't have a "data" member. Every list, including an empty list, has a "head" node. 
+.............................................................................
+int subsequence(const Sequence& seq1, const Sequence& seq2); PSUEDOCODE
+
+if Sequence 1 is empty, if Sequence 2 is empty, or if Sequence 1 doesn't contain the first item in Sequence 2
+	return -1
+
+starting with position 0, find item in specified position of Sequence 1
+	if the item equals the first item in Sequence 2 
+		if the following items in Sequence 1 are the rest of the Sequence 2 items in order
+			return position of item 
+
+	if not, move onto next position in Sequence 1
+
+return -1
+.............................................................................
+void interleave(const Sequence& seq1, const Sequence& seq2, Sequence& result); PSUEDOCODE 
+
+if Sequence 1 is empty, and Sequence 2 is not empty 
+	result is a copy of Sequence 2 
+
+if Sequence 2 is empty, and Sequence 1 is not empty 
+	result is a copy of Sequence 1 
+
+if Sequence 1 is the same size as Sequence 2 
+	starting at the first, until the last position,
+		get value at that position for Sequence 1 and Sequence 2
+		first starting from position 0, and then building onto the end
+			insert Sequence 1 value, then Sequence 2 value into result sequence		
+	
+if Sequence 1 is smaller than Sequence 2, but not empty 
+	starting at the first, until the last position !of Sequence 1!,
+		get value at that position for Sequence 1 and Sequence 2
+		first starting from position 0, and then building onto the end,
+			insert Sequence 1 value, then Sequence 2 value into result sequence	
+	
+	starting at the next position of Sequence 2, until the last position
+		get value at that position for Sequence 2
+		building onto the end,
+			insert Sequence 2 value into result sequence
+
+if Sequence 2 is smaller than Sequence 1, but not empty 
+	starting at the first, until the last position !of Sequence 2!,
+		get value at that position for Sequence 1 and Sequence 2
+		first starting from position 0, and then building onto the end,
+			insert Sequence 1 value, then Sequence 2 value into result sequence	
+	
+	starting at the next position of Sequence 1, until the last position
+		get value at that position for Sequence 1
+		building onto the end,
+			insert Sequence 1 value into result sequence
+.............................................................................
+int insert(int pos, const ItemType& value); PSUEDOCODE
+
+if pos is between zero and size of list, including zero and size of list 
+	find target node, the node with next pointer to node at position pos in list
+        make new node
+	set data new node = value
+	set new node next pointer to target's next 
+	set new node prev pointer to target 
+	set prev pointer belonging to node at target's next pointer's to new node 
+	set target's next pointer to new node 
+
+if insertion succeeded,
+	return pos 
+
+if not, 
+	return -1
+.............................................................................
+int insert(const ItemType& value); PSEUDOCODE 
+
+if size is 0
+	insert value at 0 position & return 0
+if size is greater than 0 
+	find first position where data is greater than or equal to value 
+insert value at that position
+if insertion succeeded, 
+	return pos 
+if not, return -1 
+ 
+.............................................................................
+bool erase(int pos); PSUEDOCODE
+
+if pos is between zero and size of list, including zero and size of list 
+	find target node, the node with next pointer to node at position pos in list
+	copy node at position pos 
+	make target next point to pos next 
+ 	make prev pointer belonging to node at target next point to target 
+	delete node at pos 
+
+if deletion was successful, 
+	return true 
+
+if not, return false
+.............................................................................
+int remove(const ItemType& value); PSEUDOCODE
+
+traverse through list 
+	if data at position equals value, and position is less than size of list
+		erase node at that position 
+		add to removed node counter 
+ return number of items removed 
+.............................................................................
+TEST CASES 
+
+FOR ITEMTYPE UNSIGNED LONG 
+
+Sequence a;
+    assert(a.empty()==true);//test empty for empty sequence
+    assert(a.size()==0);// test size for empty sequence
+    assert(a.insert(0,1)==0);//test two argument version of insert
+    assert(a.insert(2)==1);//test one arg version of insert
+    assert(a.insert(4)==2);//test one arg version of insert
+    assert(a.insert(3)==2);//test one arg version of insert
+    a.insert(4); a.insert(4); a.insert(6);
+    // a : 1,2,3,4,4,5,6
+    assert(a.empty()==false);//test empty for non empty sequence
+    assert(a.size()==7);//test size for non empty sequence
+    assert(a.erase(6)==true);//test erase for existing item
+    assert(a.erase(10)==false);//test erase for nonexistent item
+    assert(a.remove(1)==1);//test remove for non repeating item
+    a.dump();
+    assert(a.find(4)==2);//test remove for non repeating item
+    assert(a.remove(4)==3);
+    ItemType x = 4; ItemType& r = x;
+    assert(a.get(10,x)==false);//test get for nonexistent item
+    assert(x == 4);
+    assert(a.get(0,x)==true);//test get for existing item
+    assert(x == 2);
+    assert(a.set(10,5)==false);//test set for nonexistent item
+    assert(a.set(0,8)==true);//test set for existing item
+    assert(a.find(10));//test find for nonexistent value
+    Sequence b(a);
+    Sequence c;
+    Sequence d(c); //test copy constructor for empty sequence
+    c.insert(3); c.insert(2);
+    c = b; //test assignment operator
+    c.swap(a);
+................................................................................
+
+    Sequence a;
+//test one argument insert 
+    a.insert(0,1); a.insert(2); a.insert(3); a.insert(4); a.insert(5); 	a.insert(6);
+    Sequence b;
+//test assignment operator 
+    b = a;
+    cout << "a  "; a.dump();
+    cout << "b  "; b.dump();
+//test copy constructor 
+    Sequence c(b);
+    cout << "c  "; c.dump();
+    cout << "a  "; a.dump();
+    cout << "b  "; b.dump();
+    Sequence result;
+//test interleave 
+    interleave(b,a,result);
+    cout << "result interleave(a,b): "; result.dump();
+    Sequence d;
+//test interleave with empty sequence 
+    interleave(b,a,result);
+    d.insert(0);d.insert(0);d.insert(1);d.insert(2);d.insert(3);d.insert(4);
+    d.insert(5);d.insert(6);
+    cout << "d  "; d.dump();
+//test subsequence 
+    cout << "subsequence a in d: " << subsequence(d, a) << endl;
+//test subsequence when the two sequences are the same 
+    cout << "subsequence a in d: " << subsequence(a, a) << endl;
+//test destructor 
+.............................................................................   
+
+    Sequence a;
+    ItemType z;
+//test size for empty function 
+    cout << a.size() << endl;
+//test that insert fails if designated position bigger than size 
+    assert(a.insert(1,0)==-1);
+//test that set fails if item in that position doesn't already exist 
+    assert(a.set(1,0)==-1);
+//test get with nothing to get 
+    assert(a.get(0,z)==false);
+    a.insert(0,1);
+    a.set(0,2);
+    cout << a.size();
+    a.insert(7);
+    a.insert(3);
+    a.insert(0);
+    a.insert(4);
+    a.insert(4);
+    a.insert(4);
+    cout << "copying" << endl;
+    Sequence b(a);
+    Sequence c;
+    c.insert(9);
+    c.insert(9); c.insert(9);
+    cout << "assignment" << endl;
+    cout<< "c:" << c.size() << "a:" << a.size()<<endl;
+//test swap 
+    c.swap(a);
+    c.dump();
+//test swap w empty function
+    Sequence e;
+    e.swap(c); 
+    e.dump();
+    c.dump();
+    cout<< "c:" << c.size() << "a:" << a.size()<<endl;
+//test remove 
+    cout<<a.remove(4) << endl;
+    ItemType x = 8;
+    a.get(0, x);
+//test that you can't find a value that doesn't exist
+    assert(a.find(9)==-1);
+//test find for an existing value 
+    assert(a.find(0)==0); 
+//test find for a repeating value 
+    assert(a.find(4)==2);
+//test that you can't get a value that doesn't exist 
+    assert(a.get(10,x)==false);
+    cout << x << endl;
+//test erase 
+    a.erase(0);
+    assert(a.erase(0)==true);
+//test two-argument insert 
+    a.insert(0,8);
+    a.insert(2,3);
+    a.insert(3,4);
+    a.insert(4,5);
+    a.insert(5);
+    assert(a.size() == 5);
+//test erase for existing value 
+    a.erase(5);
+    a.dump();
+//test erase for nonexisting value
+    a.erase(9); 
+    a.dump();
+//test remove 
+    a.remove(8); 
+    a.dump();
+//test remove for nonexistent value
+    a.remove(13); a.dump(); 
+//test remove for repeating value 
+    a.remove(5);
+    cout << "(:" << endl;
+//test destructor 
+..................................................................
+ItemType = std::string
+For strings 
+ Sequence s;
+ assert(s.insert(0, "lavash") == 0); //test two arg insert function  
+ assert(s.insert(0, "tortilla") == 0);
+ assert(s.size() == 2);//test size 
+ ItemType x = "injera";
+ assert(s.get(0, x)  &&  x == "tortilla"); //test get 
+ 
+
+
+
+
